@@ -5,7 +5,7 @@ import os
 import csv
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://stipendiuser:SY2gDbvYu3sMYROS4T1CDl533bniAXo7@dpg-d0k4ff56ubrc73av6avg-a/stipendidb'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
