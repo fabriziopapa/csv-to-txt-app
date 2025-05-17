@@ -35,16 +35,19 @@ def initdb():
 # Informazioni di versione da Git (se disponibili)
 def get_git_info():
     try:
-        commit = os.popen("git rev-parse --short HEAD").read().strip()
+        commit = os.popen("git log -1 --pretty=%s").read().strip()
         date = os.popen("git log -1 --format=%cd --date=short").read().strip()
         return commit, date
     except Exception as e:
-        return "unknown", "unknown"
+        return "Versione sconosciuta", "Data sconosciuta"
 
 @app.context_processor
 def inject_git_info():
     commit, date = get_git_info()
-    return dict(git_commit=commit, git_date=date)
+    return dict(git_commit=commit, 
+                git_date=date,
+                app_notice="Applicazione locale - nessun dato sensibile o fiscale viene memorizzato in remoto"
+                )
 
 @app.route('/info')
 def info():

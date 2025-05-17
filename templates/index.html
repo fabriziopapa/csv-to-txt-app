@@ -58,9 +58,11 @@
 
     <h1>Converti CSV in Tracciato .TXT</h1>
     
+    {% if app_notice %}
     <div class="alert">
         {{ app_notice }}
     </div>
+    {% endif %}
 
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="csv_file" accept=".CSV" required><br>
