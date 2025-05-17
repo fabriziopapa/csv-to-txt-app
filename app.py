@@ -127,6 +127,7 @@ def get_filename_by_progressivo(progressivo):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    filename = None
     if request.method == 'POST':
         file = request.files.get('csv_file')
         if file and file.filename.endswith('.csv'):
@@ -136,8 +137,7 @@ def index():
             filename = get_filename_by_progressivo(progressivo)
             txt_path = os.path.join(OUTPUT_FOLDER, filename)
             convert_csv_to_fixed_txt(csv_path, txt_path)
-            return redirect(url_for('download', filename=filename))
-    return render_template('index.html')
+    return render_template('index.html', filename=filename)
 
 @app.route('/download/<filename>')
 def download(filename):

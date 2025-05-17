@@ -34,6 +34,7 @@
         }
         .download-link {
             margin-top: 2rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -46,10 +47,11 @@
         <button class="btn" type="submit">Carica e Converti</button>
     </form>
 
-    {% if request.path.startswith('/download/') %}
-        <div class="download-link">
-            <a class="btn" href="{{ request.path }}">Scarica il file generato</a>
-        </div>
+    {% if filename %}
+    <div class="download-link">
+        <p><strong>Elaborazione completata!</strong></p>
+        <a class="btn" href="{{ url_for('download', filename=filename) }}">Scarica il file generato</a>
+    </div>
     {% endif %}
 
 </body>
