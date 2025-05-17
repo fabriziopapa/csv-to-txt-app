@@ -63,3 +63,7 @@ Ogni riga è lunga esattamente 300 byte.
 - Python 3.8+
 - PostgreSQL (Render o locale)
 - Dipendenze Python:
+    Flask
+    Flask-SQLAlchemy
+    psycopg2-binary
+    gunicorn
