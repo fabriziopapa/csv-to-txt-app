@@ -23,6 +23,16 @@ class Progressivo(db.Model):
     progressivo = db.Column(db.Integer, nullable=False)
     __table_args__ = (db.UniqueConstraint('nome_base', 'anno', name='_nome_anno_uc'),)
 
+# Rotta manuale per creare la tabella su Render
+@app.route('/initdb')
+def initdb():
+    try:
+        with app.app_context():
+            db.create_all()
+        return "Tabelle create correttamente."
+    except Exception as e:
+        return f"Errore nella creazione delle tabelle: {str(e)}"
+    
 def get_next_progressivo(nome_base):
     anno = datetime.now().year
     print(f"Recupero progressivo per {nome_base} - anno {anno}")
