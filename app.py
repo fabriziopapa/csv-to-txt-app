@@ -5,7 +5,7 @@ import os
 import csv
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://stipendiuser:SY2gDbvYu3sMYROS4T1CDl533bniAXo7@dpg-d0k4ff56ubrc73av6avg-a/stipendidb')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://stipendiuser:SY2gDbvYu3sMYROS4T1CDl533bniAXo7@dpg-d0k4ff56ubrc73av6avg-a/stipendidb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -25,51 +25,55 @@ class Progressivo(db.Model):
 
 def get_next_progressivo(nome_base):
     anno = datetime.now().year
+    print(f"Recupero progressivo per {nome_base} - anno {anno}")
     record = Progressivo.query.filter_by(nome_base=nome_base, anno=anno).first()
     if record:
         record.progressivo += 1
+        print(f"Progressivo esistente trovato: nuovo progressivo = {record.progressivo}")
     else:
         record = Progressivo(nome_base=nome_base, anno=anno, progressivo=1)
         db.session.add(record)
+        print("Creato nuovo record progressivo = 1")
     db.session.commit()
     return record.progressivo
 
 def generate_filename():
     anno = datetime.now().year
     progressivo = get_next_progressivo('IRMEQS')
-    return f"IRMEQS{anno}{progressivo:010}.TXT"
+    filename = f"IRMEQS{anno}{progressivo:010}.TXT"
+    print(f"Generato nome file: {filename}")
+    return filename
 
 def format_record_rma(progressivo):
     identificativo_file = f"IRMEQS{datetime.now().year}{progressivo:010}"
     data_creazione = datetime.now().strftime('%Y%m%d')
+    print(f"Creazione RMA: identificativo_file={identificativo_file}, data={data_creazione}")
     record = (
-        'RMA' +                      # 001-003
-        '0000001' +                  # 004-010
-        identificativo_file.ljust(20)[:20] +  # 011-030
-        data_creazione +            # 031-038
-        'R01' +                     # 039-041
-        ' ' * (300 - 41)            # 042-300
+        'RMA' +
+        '0000001' +
+        identificativo_file.ljust(20)[:20] +
+        data_creazione +
+        'R01' +
+        ' ' * (300 - 41)
     )
     return record
 
 def format_record_rmd(cod_fis, netto, index):
+    print(f"Creazione RMD {index + 2}: CF={cod_fis}, netto={netto}")
     tipo_record = 'RMD'
-    progressivo_record = str(index + 2).zfill(7)   # 004-010 (inizia da 0000002)
+    progressivo_record = str(index + 2).zfill(7)
     progressivo_richiesta = '0000001'
     tipo_soggetto = '1'
     codice_fiscale = cod_fis.ljust(16)[:16]
-
     oggi = datetime.now()
     identificativo_pagamento = f"FSHD{oggi.strftime('%Y%m%d')}{index + 2}".ljust(15)[:15]
-
     try:
         netto_float = float(netto.replace(',', '.'))
         importo = f"{int(netto_float * 100):015d}"
     except ValueError:
         importo = '0'.zfill(15)
-
+        print("Valore netto non valido, impostato a 0")
     filler = ' ' * (300 - 64)
-
     return (
         tipo_record +
         progressivo_record +
@@ -84,42 +88,38 @@ def format_record_rmd(cod_fis, netto, index):
 def format_record_rmz(count, progressivo):
     identificativo_file = f"IRMEQS{datetime.now().year}{progressivo:010}".ljust(20)[:20]
     data_creazione = datetime.now().strftime('%Y%m%d')
-    progressivo_rmz = str(count + 2).zfill(7)  # RMA + RMD * N + RMZ = totale
+    progressivo_rmz = str(count + 2).zfill(7)
     num_rmd = str(count).zfill(7)
     num_emf = '0000000'
     num_totale = str(count + 2).zfill(7)
     filler = ' ' * 71
+    print(f"Creazione RMZ: progressivo={progressivo_rmz}, totale RMD={num_rmd}, totale={num_totale}")
     record = (
-        'RMZ' +                   # 001-003
-        progressivo_rmz +         # 004-010
-        identificativo_file +     # 011-030
-        data_creazione +          # 031-038
-        num_rmd +                 # 039-045 (NUMERO RECORD EMD)
-        num_emf +                 # 046-052 (NUMERO RECORD EMF)
-        num_totale +              # 053-059 (TOTALE RECORD)
-        filler                    # 060-130
+        'RMZ' +
+        progressivo_rmz +
+        identificativo_file +
+        data_creazione +
+        num_rmd +
+        num_emf +
+        num_totale +
+        filler
     ).ljust(300)[:300]
     return record
 
-def convert_csv_to_fixed_txt(csv_path, txt_path):
-    progressivo = get_next_progressivo('IRMEQS')
+def convert_csv_to_fixed_txt(csv_path, txt_path, progressivo):
+    print(f"Apro CSV da: {csv_path} e scrivo TXT in: {txt_path}")
     with open(csv_path, newline='', encoding='utf-8') as csvfile, open(txt_path, 'w', encoding='utf-8') as txtfile:
         reader = csv.DictReader(csvfile, delimiter=';')
         rows = list(reader)
-
-        # Record di testa RMA
         txtfile.write(format_record_rma(progressivo) + '\n')
-
-        # Record di dettaglio RMD
         count = 0
         for i, row in enumerate(rows):
             cod_fis = row['COD_FIS'].strip()
             netto = row['NETTO'].strip()
             txtfile.write(format_record_rmd(cod_fis, netto, i) + '\n')
             count += 1
-
-        # Record di coda RMZ
         txtfile.write(format_record_rmz(count, progressivo) + '\n')
+        print(f"File TXT generato con {count} record RMD")
 
 def get_filename_by_progressivo(progressivo):
     anno = datetime.now().year
@@ -129,22 +129,28 @@ def get_filename_by_progressivo(progressivo):
 def index():
     filename = None
     if request.method == 'POST':
+        print("Ricevuta richiesta POST con file CSV")
         file = request.files.get('csv_file')
         if file and file.filename.endswith('.csv'):
+            print(f"File valido ricevuto: {file.filename}")
             csv_path = os.path.join(UPLOAD_FOLDER, file.filename)
             file.save(csv_path)
             progressivo = get_next_progressivo('IRMEQS')
             filename = get_filename_by_progressivo(progressivo)
             txt_path = os.path.join(OUTPUT_FOLDER, filename)
-            convert_csv_to_fixed_txt(csv_path, txt_path)
+            convert_csv_to_fixed_txt(csv_path, txt_path, progressivo)
+        else:
+            print("Nessun file o file non valido")
     return render_template('index.html', filename=filename)
 
 @app.route('/download/<filename>')
 def download(filename):
     path = os.path.join(OUTPUT_FOLDER, filename)
+    print(f"Download richiesto per: {filename}")
     return send_file(path, as_attachment=True)
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+    print("Applicazione Flask avviata in modalità debug")
     app.run(debug=True)
