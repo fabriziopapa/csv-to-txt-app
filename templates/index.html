@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Convertitore CSV → TXT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+        }
+        form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="file"] {
+            margin-bottom: 1rem;
+        }
+        .btn {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .download-link {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Converti CSV in Tracciato .TXT</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="csv_file" accept=".csv" required><br>
+        <button class="btn" type="submit">Carica e Converti</button>
+    </form>
+
+    {% if request.path.startswith('/download/') %}
+        <div class="download-link">
+            <a class="btn" href="{{ request.path }}">Scarica il file generato</a>
+        </div>
+    {% endif %}
+
+</body>
+</html>
