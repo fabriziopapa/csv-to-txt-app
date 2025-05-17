@@ -32,6 +32,30 @@ def initdb():
         return "Tabelle create correttamente."
     except Exception as e:
         return f"Errore nella creazione delle tabelle: {str(e)}"
+# Informazioni di versione da Git (se disponibili)
+def get_git_info():
+    try:
+        commit = os.popen("git rev-parse --short HEAD").read().strip()
+        date = os.popen("git log -1 --format=%cd --date=short").read().strip()
+        return commit, date
+    except Exception as e:
+        return "unknown", "unknown"
+
+@app.context_processor
+def inject_git_info():
+    commit, date = get_git_info()
+    return dict(git_commit=commit, git_date=date)
+
+@app.route('/info')
+def info():
+    return {
+        "versione": get_git_info()[0],
+        "data_push": get_git_info()[1]
+    }
+
+@app.route('/alert')
+def alert():
+    return "Applicazione locale - nessun dato sensibile o fiscale viene memorizzato in remoto"
     
 def get_next_progressivo(nome_base):
     anno = datetime.now().year
