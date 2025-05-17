@@ -131,7 +131,7 @@ def index():
     if request.method == 'POST':
         print("Ricevuta richiesta POST con file CSV")
         file = request.files.get('csv_file')
-        if file and file.filename.endswith('.csv'):
+        if file and file.filename.endswith('.CSV'):
             print(f"File valido ricevuto: {file.filename}")
             csv_path = os.path.join(UPLOAD_FOLDER, file.filename)
             file.save(csv_path)
