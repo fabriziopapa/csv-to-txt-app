@@ -118,14 +118,7 @@
     </style>
 </head>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Se l’URL corrente finisce con “/hrsuite”, apri automaticamente la sezione HRSuite
-      if (window.location.pathname.endsWith('/hrsuite')) {
-        showSection('hrsuite');
-      }
-    });
-  </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -133,7 +126,10 @@
       const meseInput = document.getElementById('meseCompetenza');
       const meseError = document.getElementById('meseError');
       const regex = /^(0[1-9]|1[0-2])$/;
-  
+     // Se l’URL corrente finisce con “/hrsuite”, apri automaticamente la sezione HRSuite
+      if (window.location.pathname.endsWith('/hrsuite')) {
+        showSection('hrsuite');
+      }
       // al submit: controllo
       form.addEventListener('submit', function(e) {
         const val = meseInput.value.trim();
