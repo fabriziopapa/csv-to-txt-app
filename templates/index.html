@@ -183,6 +183,11 @@
 
     <div id="hrsuite" class="section">
         <h2>HRSuite</h2>
+        {% if app_notice %}
+        <div class="alert">
+            {{ app_notice }}
+        </div>
+        {% endif %}
         <form action="/hrsuite#hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
             <label for="csv_file_1">CSV Anagrafico (Nominativo, Matricola, Ruolo):</label>
             <input type="file" name="csv_file_1" accept=".CSV" required>
