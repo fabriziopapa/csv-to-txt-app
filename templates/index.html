@@ -120,6 +120,15 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Se l’URL corrente finisce con “/hrsuite”, apri automaticamente la sezione HRSuite
+      if (window.location.pathname.endsWith('/hrsuite')) {
+        showSection('hrsuite');
+      }
+    });
+  </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
       const form = document.querySelector('form[action="/hrsuite"]');
       const meseInput = document.getElementById('meseCompetenza');
       const meseError = document.getElementById('meseError');
@@ -176,7 +185,7 @@
 
     <div id="hrsuite" class="section">
         <h2>HRSuite</h2>
-        <form action="/hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
+        <form action="/hrsuite#hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
             <label for="csv_file_1">CSV Anagrafico (Nominativo, Matricola, Ruolo):</label>
             <input type="file" name="csv_file_1" accept=".CSV" required>
           
