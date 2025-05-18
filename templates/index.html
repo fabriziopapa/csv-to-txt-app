@@ -169,7 +169,7 @@
         {% if filename %}
         <div class="download-link">
             <p><strong>Elaborazione completata!</strong></p>
-            <a class="btn" href="{{ url_for('download', filename=filename) }}">Scarica il file generato</a>
+            <a class="btn" href="{{ url_for('hrsuite.download_hrsuite', filename=result_filename) }}">Scarica il file HRSuite</a>
         </div>
         {% endif %}
     </div>
