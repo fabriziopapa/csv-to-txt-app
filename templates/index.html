@@ -93,8 +93,50 @@
             text-align: center;
             }
 
+            /* stile per il bordo rosso in errore */
+            .input-error {
+            border-color: #dc3545 !important;
+            }
+
+            /* messaggio di errore sotto il campo */
+            .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 0.25rem;
+            }
+
+
     </style>
 </head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form[action="/hrsuite"]');
+      const meseInput = document.getElementById('meseCompetenza');
+      const meseError = document.getElementById('meseError');
+      const regex = /^(0[1-9]|1[0-2])$/;
+  
+      // al submit: controllo
+      form.addEventListener('submit', function(e) {
+        const val = meseInput.value.trim();
+        if (!regex.test(val)) {
+          e.preventDefault();
+          meseInput.classList.add('input-error');
+          meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
+        }
+      });
+  
+      // al cambiamento: rimuovi errore se corretto
+      meseInput.addEventListener('input', function() {
+        if (regex.test(meseInput.value.trim())) {
+          meseInput.classList.remove('input-error');
+          meseError.textContent = '';
+        }
+      });
+    });
+  </script>
+  
+
 <body>
     <nav>
         <a onclick="showSection('convertitore')">Convertitore CSV</a>
@@ -138,8 +180,15 @@
             <label>Anno competenza:</label>
             <input type="number" name="annoCompetenza" required>
           
-            <label>Mese competenza (1-12):</label>
-            <input type="number" name="meseCompetenza" required>
+            <label for="meseCompetenza">Mese competenza (01–12):</label>
+            <input 
+              type="text" 
+              id="meseCompetenza" 
+              name="meseCompetenza" 
+              placeholder="es. 03" 
+              required
+            >
+            <div class="error-message" id="meseError"></div>
           
             <label>Codice Voce:</label>
             <input type="text" name="codiceVoce" required>
