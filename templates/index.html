@@ -99,7 +99,44 @@
 
     <div id="hrsuite" class="section">
         <h2>HRSuite</h2>
-        <p>Pagina dedicata alla funzione HRSuite.</p>
+        <form action="/hrsuite" method="POST" enctype="multipart/form-data">
+            <label>CSV Anagrafico (con matricole):</label><br>
+            <input type="file" name="csv_file_1" accept=".CSV" required><br><br>
+        
+            <label>CSV Compensi (matricola + importo):</label><br>
+            <input type="file" name="csv_file_2" accept=".CSV" required><br><br>
+        
+            <label>Identificativo Provvedimento (opzionale):</label><br>
+            <input type="text" name="identificativoProvvedimento"><br><br>
+        
+            <label>Anno competenza:</label>
+            <input type="number" name="annoCompetenza" required><br><br>
+        
+            <label>Mese competenza (1-12):</label>
+            <input type="number" name="meseCompetenza" required><br><br>
+        
+            <label>Codice Capitolo:</label>
+            <input type="text" name="codiceCapitolo" required><br><br>
+        
+            <label>Centro di Costo (opzionale):</label>
+            <input type="text" name="codiceCentroDiCosto"><br><br>
+        
+            <label>Riferimento (opzionale):</label>
+            <input type="text" name="riferimento"><br><br>
+        
+            <label>Note (opzionale):</label>
+            <input type="text" name="note"><br><br>
+        
+            <button class="btn" type="submit">Genera File HRSuite</button>
+        </form>
+        
+        {% if result_filename %}
+        <div class="download-link">
+            <p><strong>Elaborazione HRSuite completata!</strong></p>
+            <a class="btn" href="{{ url_for('download_hrsuite', filename=result_filename) }}">Scarica il file HRSuite</a>
+        </div>
+        {% endif %}
+        
     </div>
 
     <footer>
