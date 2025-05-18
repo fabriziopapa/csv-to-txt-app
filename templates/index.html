@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Convertitore CSV → TXT</title>
-      <style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             background: #f5f5f5;
@@ -11,6 +11,21 @@
             flex-direction: column;
             align-items: center;
             padding-top: 60px;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 10px;
+            cursor: pointer;
+            color: #007BFF;
+            text-decoration: underline;
+        }
+        .section {
+            display: none;
+        }
+        .active {
+            display: block;
         }
         form {
             background: white;
@@ -55,31 +70,48 @@
     </style>
 </head>
 <body>
+    <nav>
+        <a onclick="showSection('convertitore')">Convertitore CSV</a>
+        <a onclick="showSection('hrsuite')">HRSuite</a>
+    </nav>
 
-    <h1>Converti CSV in Tracciato .TXT</h1>
-    
-    {% if app_notice %}
-    <div class="alert">
-        {{ app_notice }}
+    <div id="convertitore" class="section active">
+        <h1>Converti CSV in Tracciato .TXT</h1>
+
+        {% if app_notice %}
+        <div class="alert">
+            {{ app_notice }}
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="csv_file" accept=".CSV" required><br>
+            <button class="btn" type="submit">Carica e Converti</button>
+        </form>
+
+        {% if filename %}
+        <div class="download-link">
+            <p><strong>Elaborazione completata!</strong></p>
+            <a class="btn" href="{{ url_for('download', filename=filename) }}">Scarica il file generato</a>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="csv_file" accept=".CSV" required><br>
-        <button class="btn" type="submit">Carica e Converti</button>
-    </form>
-
-    {% if filename %}
-    <div class="download-link">
-        <p><strong>Elaborazione completata!</strong></p>
-        <a class="btn" href="{{ url_for('download', filename=filename) }}">Scarica il file generato</a>
+    <div id="hrsuite" class="section">
+        <h2>HRSuite</h2>
+        <p>Pagina dedicata alla funzione HRSuite.</p>
     </div>
-    {% endif %}
 
-     <footer>
-         {{ git_commit }} &middot; Data Ultimo aggiornamento: {{ git_date }}<br>
-         <a href="https://github.com/fabriziopapa/csv-to-txt-app" target="_blank"> Codice OpenSouce - Vai alla repository su GitHub</a>
-
+    <footer>
+        {{ git_commit }} &middot; Data Ultimo aggiornamento: {{ git_date }}<br>
+        <a href="https://github.com/fabriziopapa/csv-to-txt-app" target="_blank"> Codice OpenSouce - Vai alla repository su GitHub</a>
     </footer>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
 </body>
 </html>
