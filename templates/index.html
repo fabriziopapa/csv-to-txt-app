@@ -67,42 +67,52 @@
             font-size: 0.9em;
             color: #777;
         }
+        
+                /* ─── Layout HRSuite con CSS Grid ───────────────────────────── */
         .form-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 1rem 2rem;
-            align-items: center;
-            }
+        display: grid;
+        grid-template-columns: 200px 1fr;  /* label fissa, input flessibile */
+        column-gap: 1rem;
+        row-gap: 1rem;
+        align-items: center;
+        }
 
-            .form-grid label {
-            justify-self: end;
-            }
+        /* Allinea le label a destra */
+        .form-grid label {
+        justify-self: end;
+        }
 
-            .form-grid input {
-            width: 100%;
-            padding: 0.5rem;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            }
+        /* Input e button occupano l’intera colonna di destra */
+        .form-grid input,
+        .form-grid button {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        }
 
-            /* Per il bottone, facciamolo al centro su due colonne */
-            .form-grid .full-row {
-            grid-column: 1 / -1;
-            text-align: center;
-            }
+        /* Pulsante su tutta la larghezza del form, centrato */
+        .form-grid .full-row {
+        grid-column: 1 / -1;
+        text-align: center;
+        }
 
-            /* stile per il bordo rosso in errore */
-            .input-error {
-            border-color: #dc3545 !important;
-            }
+        /* ─── Styling per validazione / errori ─────────────────────── */
+        .input-error {
+        border-color: #dc3545 !important;  /* bordo rosso */
+        }
 
-            /* messaggio di errore sotto il campo */
-            .error-message {
-            color: #dc3545;
-            font-size: 0.9em;
-            margin-top: 0.25rem;
-            }
+        .error-message {
+        grid-column: 2;           /* posiziona il messaggio sotto l’input */
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 0.25rem;
+        }
+
+                
+                
 
 
     </style>
