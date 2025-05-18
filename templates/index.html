@@ -167,16 +167,16 @@
     <div id="hrsuite" class="section">
         <h2>HRSuite</h2>
         <form action="/hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
-            <label>CSV Anagrafico (Nominativo, Matricola, Ruolo):</label>
+            <label for="csv_file_1">CSV Anagrafico (Nominativo, Matricola, Ruolo):</label>
             <input type="file" name="csv_file_1" accept=".CSV" required>
           
-            <label>CSV Compensi (Nominativo + importo e/o parti):</label>
+            <label for="csv_file_2">CSV Compensi (Nominativo + importo e/o parti):</label>
             <input type="file" name="csv_file_2" accept=".CSV" required>
           
-            <label>Identificativo Provvedimento (opzionale):</label>
+            <label for="identificativoProvvedimento">Identificativo Provvedimento (opzionale):</label>
             <input type="text" name="identificativoProvvedimento">
           
-            <label>Anno competenza:</label>
+            <label for="annoCompetenza">Anno competenza:</label>
             <input type="number" name="annoCompetenza" required>
           
             <label for="meseCompetenza">Mese competenza (01–12):</label>
@@ -189,19 +189,19 @@
             >
             <div class="error-message" id="meseError"></div>
           
-            <label>Codice Voce:</label>
+            <label for="codiceVoce">Codice Voce:</label>
             <input type="text" name="codiceVoce" required>
           
-            <label>Codice Capitolo:</label>
+            <label for="codiceCapitolo">Codice Capitolo:</label>
             <input type="text" name="codiceCapitolo" required>
           
-            <label>Centro di Costo (opzionale):</label>
+            <label for="codiceCentroDiCosto">Centro di Costo (opzionale):</label>
             <input type="text" name="codiceCentroDiCosto">
           
-            <label>Riferimento (opzionale):</label>
+            <label for="riferimento">Riferimento (opzionale):</label>
             <input type="text" name="riferimento">
           
-            <label>Note (opzionale):</label>
+            <label for="note">Note (opzionale):</label>
             <input type="text" name="note">
           
             <div class="full-row">
