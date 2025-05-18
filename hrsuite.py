@@ -27,6 +27,8 @@ def hrsuite():
         codiceCentroDiCosto = request.form.get('codiceCentroDiCosto', '')
         riferimento = request.form.get('riferimento', '')
         nota = request.form.get('note', '')
+        codiceVoce = request.form.get('codiceVoce')
+
 
         if csv1 and csv2 and csv1.filename.endswith('.CSV') and csv2.filename.endswith('.CSV'):
             path1 = os.path.join(UPLOAD_FOLDER, 'anagrafico.csv')
@@ -39,7 +41,7 @@ def hrsuite():
             genera_output_hrsuite(
                 path1, path2, output_path,
                 identificativoProvvedimento,
-                anno, mese,
+                anno, mese,codiceVoce,
                 codiceCapitolo, codiceCentroDiCosto,
                 riferimento, nota
             )
@@ -52,7 +54,7 @@ def download_hrsuite(filename):
     return send_file(path, as_attachment=True)
 
 def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
-                          identificativoProvvedimento, anno, mese,
+                          identificativoProvvedimento, anno, mese,codiceVoce,
                           codiceCapitolo, codiceCentroDiCosto,
                           riferimento, nota):
     
@@ -111,12 +113,12 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
 
             riferimento_fmt = f"TL@{riferimento}@" if riferimento else ""
 
-            tipoProvv = "" if identificativoProvvedimento else "029"
-            numProvv = "" if identificativoProvvedimento else "61947"
-            dataProvv = "" if identificativoProvvedimento else "09/05/2025"
+            tipoProvv = "" if identificativoProvvedimento else ""
+            numProvv = "" if identificativoProvvedimento else ""
+            dataProvv = "" if identificativoProvvedimento else ""
 
             riga = [
-                matricola, "1", ruolo, "04428", identificativoProvvedimento,
+                matricola, "1", ruolo, codiceVoce, identificativoProvvedimento,
                 tipoProvv, numProvv, dataProvv,
                 anno, mese, dataCompetenzaVoce,
                 "E", "0", parti, importo_str, "E",
