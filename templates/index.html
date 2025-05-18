@@ -127,9 +127,11 @@
       const meseError = document.getElementById('meseError');
       const regex = /^(0[1-9]|1[0-2])$/;
      // Se l’URL corrente finisce con “/hrsuite”, apri automaticamente la sezione HRSuite
-      if (window.location.pathname.endsWith('/hrsuite')) {
-        showSection('hrsuite');
-      }
+     if (window.location.pathname.endsWith('/hrsuite')) {
+      showSection('hrsuite');
+    } else {
+      showSection('convertitore');
+    }
       // al submit: controllo
       form.addEventListener('submit', function(e) {
         const val = meseInput.value.trim();
@@ -153,9 +155,9 @@
 
 <body>
     <nav>
-        <a onclick="showSection('convertitore')">Convertitore CSV</a>
-        <a onclick="showSection('hrsuite')">HRSuite</a>
-    </nav>
+        <a href="{{ url_for('index') }}">Convertitore CSV</a>
+        <a href="{{ url_for('hrsuite.hrsuite') }}">HRSuite</a>
+      </nav>
 
     <div id="convertitore" class="section active">
         <h1>Converti CSV in Tracciato .TXT</h1>
