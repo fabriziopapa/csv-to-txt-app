@@ -132,24 +132,30 @@
     } else {
       showSection('convertitore');
     }
-      // al submit: controllo
-      form.addEventListener('submit', function(e) {
-        const val = meseInput.value.trim();
-        if (!regex.test(val)) {
-          e.preventDefault();
-          meseInput.classList.add('input-error');
-          meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
-        }
-      });
-  
-      // al cambiamento: rimuovi errore se corretto
-      meseInput.addEventListener('input', function() {
-        if (regex.test(meseInput.value.trim())) {
-          meseInput.classList.remove('input-error');
-          meseError.textContent = '';
-        }
-      });
+    const form = document.getElementById('hrsuiteForm');
+    if (!form) return;  // se non ci siamo, esci
+
+    const meseInput = document.getElementById('meseCompetenza');
+    const meseError = document.getElementById('meseError');
+    const regex = /^(0[1-9]|1[0-2])$/;
+
+    form.addEventListener('submit', function(e) {
+      const val = meseInput.value.trim();
+      if (!regex.test(val)) {
+        e.preventDefault();
+        meseInput.classList.add('input-error');
+        meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
+      }
     });
+
+    meseInput.addEventListener('input', function() {
+      if (regex.test(meseInput.value.trim())) {
+        meseInput.classList.remove('input-error');
+        meseError.textContent = '';
+      }
+    });
+  }); 
+    
   </script>
   
 
@@ -188,7 +194,7 @@
             {{ app_notice }}
         </div>
         {% endif %}
-        <form action="/hrsuite#hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
+        <form id="hrsuiteForm"  action="/hrsuite#hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
             <label for="csv_file_1">CSV Anagrafico (Nominativo, Matricola, Ruolo):</label>
             <input type="file" name="csv_file_1" accept=".CSV" required>
           
