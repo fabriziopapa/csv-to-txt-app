@@ -67,6 +67,32 @@
             font-size: 0.9em;
             color: #777;
         }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            column-gap: 1rem;
+            row-gap: 1rem;
+            align-items: center;
+            }
+
+            .form-grid label {
+            justify-self: end;
+            }
+
+            .form-grid input {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            }
+
+            /* Per il bottone, facciamolo al centro su due colonne */
+            .form-grid .full-row {
+            grid-column: 1 / -1;
+            text-align: center;
+            }
+
     </style>
 </head>
 <body>
@@ -99,39 +125,42 @@
 
     <div id="hrsuite" class="section">
         <h2>HRSuite</h2>
-        <form action="/hrsuite" method="POST" enctype="multipart/form-data">
-            <label>CSV Anagrafico (con Nominativo, Matricola,Ruolo ):</label><br>
-            <input type="file" name="csv_file_1" accept=".CSV" required><br><br>
-        
-            <label>CSV Compensi (Nominativo + importo e/o parti):</label><br>
-            <input type="file" name="csv_file_2" accept=".CSV" required><br><br>
-        
-            <label>Identificativo Provvedimento (opzionale):</label><br>
-            <input type="text" name="identificativoProvvedimento"><br><br>
-        
+        <form action="/hrsuite" method="POST" enctype="multipart/form-data" class="form-grid">
+            <label>CSV Anagrafico (Nominativo, Matricola, Ruolo):</label>
+            <input type="file" name="csv_file_1" accept=".CSV" required>
+          
+            <label>CSV Compensi (Nominativo + importo e/o parti):</label>
+            <input type="file" name="csv_file_2" accept=".CSV" required>
+          
+            <label>Identificativo Provvedimento (opzionale):</label>
+            <input type="text" name="identificativoProvvedimento">
+          
             <label>Anno competenza:</label>
-            <input type="number" name="annoCompetenza" required><br><br>
-        
+            <input type="number" name="annoCompetenza" required>
+          
             <label>Mese competenza (1-12):</label>
-            <input type="number" name="meseCompetenza" required><br><br>
-
+            <input type="number" name="meseCompetenza" required>
+          
             <label>Codice Voce:</label>
-            <input type="text" name="codiceVoce" required><br><br>
-
+            <input type="text" name="codiceVoce" required>
+          
             <label>Codice Capitolo:</label>
-            <input type="text" name="codiceCapitolo" required><br><br>
-        
+            <input type="text" name="codiceCapitolo" required>
+          
             <label>Centro di Costo (opzionale):</label>
-            <input type="text" name="codiceCentroDiCosto"><br><br>
-        
+            <input type="text" name="codiceCentroDiCosto">
+          
             <label>Riferimento (opzionale):</label>
-            <input type="text" name="riferimento"><br><br>
-        
+            <input type="text" name="riferimento">
+          
             <label>Note (opzionale):</label>
-            <input type="text" name="note"><br><br>
-        
-            <button class="btn" type="submit">Genera File HRSuite</button>
-        </form>
+            <input type="text" name="note">
+          
+            <div class="full-row">
+              <button class="btn" type="submit">Genera File HRSuite</button>
+            </div>
+          </form>
+          
         
         {% if result_filename %}
         <div class="download-link">
