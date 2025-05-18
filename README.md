@@ -58,6 +58,37 @@ Ogni riga è lunga esattamente 300 byte.
 
 ---
 
+
+---
+
+## 🧮 Funzione HRSuite (CSV → CSV strutturato)
+
+A partire da due file `.CSV`:
+
+1. **Anagrafico**: con i campi `matricola`, `nominativo`, `ruolo`
+2. **Compensi**: con i campi `nominativo`, `importo` e/o `parti`
+
+Il sistema esegue una **join sui nominativi** (ignorando maiuscole/minuscole e spazi) e genera un file CSV nel formato previsto per il caricamento su HRSuite.
+
+### 📥 Campi richiesti da form:
+- `codiceVoce` *(obbligatorio)*
+- `identificativoProvvedimento` *(opzionale: se presente, azzera tipo/numero/data provvedimento)*
+- `annoCompetenzaLiquidazione` *(obbligatorio)*
+- `meseCompetenzaLiquidazione` *(obbligatorio)*
+- `codiceCapitolo` *(obbligatorio)*
+- `codiceCentroDiCosto` *(opzionale)*
+- `riferimento` *(opzionale – formattato come `TL@[testo]@`)*
+- `note` *(opzionale)*
+
+### ⚙️ Logica automatica:
+- Se `importo` mancante → impostato a `0`
+- Se `parti` mancante → impostato a `1`
+- La `dataCompetenzaVoce` è calcolata come **ultimo giorno del mese** indicato
+
+---
+
+
+
 ## 🧑‍💻 Requisiti
 
 - Python 3.8+
