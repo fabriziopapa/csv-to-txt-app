@@ -54,7 +54,7 @@ def hrsuite():
                 identificativoProvvedimento,
                 anno, mese,
                 codiceVoce, codiceCapitolo, codiceCentroDiCosto,
-                riferimento, nota
+                riferimento, nota,compensi_omnicomprensivi
             )
             print(f"[DEBUG] Generato file: {output_path}")
 
