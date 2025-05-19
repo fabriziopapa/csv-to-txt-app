@@ -66,6 +66,8 @@ def download_hrsuite(filename):
     print(f"[DEBUG] Download richiesto per: {path}")
     return send_file(path, as_attachment=True)
 
+
+
 def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
                           identificativoProvvedimento,
                           anno, mese,
@@ -81,10 +83,10 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
     with open(anagrafico_path, newline='', encoding='utf-8') as a_file:
         reader = csv.DictReader(a_file, delimiter=';')
         for row in reader:
-            nominativo = row.get("nominativo", "").strip().upper()
+            nominativo = row.get("NOMINATIVO", "").strip().upper()
             anagrafico[nominativo] = {
-                "matricola": row.get("matricola", "").zfill(6),
-                "ruolo": row.get("ruolo", "ND")
+                "MATRICOLA": row.get("MATRICOLA", "").zfill(6),
+                "RUOLO": row.get("RUOLO", "ND")
             }
         print(f"[DEBUG] Lettura anagrafico: {len(anagrafico)} voci caricate")
 
@@ -113,7 +115,7 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
     with open(compensi_path, newline='', encoding='utf-8') as c_file:
         reader = csv.DictReader(c_file, delimiter=';')
         for i, row in enumerate(reader, start=1):
-            nominativo = row.get("nominativo", "").strip().upper()
+            nominativo = row.get("NOMINATIVO", "").strip().upper()
             if nominativo not in anagrafico:
                 print(f"[DEBUG] RIGA {i}: nominativo '{nominativo}' NON trovato in anagrafico")
                 mancanti += 1
