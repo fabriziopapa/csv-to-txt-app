@@ -121,49 +121,54 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.querySelector('form[action="/hrsuite"]');
-      const meseInput = document.getElementById('meseCompetenza');
-      const meseError = document.getElementById('meseError');
-      const regex = /^(0[1-9]|1[0-2])$/;
-     // Se l’URL corrente finisce con “/hrsuite”, apri automaticamente la sezione HRSuite
-     if (window.location.pathname.endsWith('/hrsuite')) {
-      showSection('hrsuite');
-    } else {
-      showSection('convertitore');
-    }
-    const form = document.getElementById('hrsuiteForm');
-    if (!form) return;  // se non ci siamo, esci
-
-    const meseInput = document.getElementById('meseCompetenza');
-    const meseError = document.getElementById('meseError');
-    const regex = /^(0[1-9]|1[0-2])$/;
-
-    form.addEventListener('submit', function(e) {
-      const val = meseInput.value.trim();
-      if (!regex.test(val)) {
-        e.preventDefault();
-        meseInput.classList.add('input-error');
-        meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
+      function showSection(id) {
+        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); 
       }
-    });
+    </script>
 
-    meseInput.addEventListener('input', function() {
-      if (regex.test(meseInput.value.trim())) {
-        meseInput.classList.remove('input-error');
-        meseError.textContent = '';
-      }
-    });
-  }); 
-    
-  </script>
+    <!-- Tutta la logica di tab-switch e validazione in un unico script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // 1) Apri la tab giusta in base alla URL
+        if (window.location.pathname.endsWith('/hrsuite')) {
+          showSection('hrsuite');
+        } else {
+          showSection('convertitore');
+        }
+
+        // 2) Validation only if HRSuite form is present
+        const form = document.getElementById('hrsuiteForm');
+        if (!form) return;
+
+        const meseInput = document.getElementById('meseCompetenza');
+        const meseError = document.getElementById('meseError');
+        const regex = /^(0[1-9]|1[0-2])$/;
+
+        form.addEventListener('submit', function(e) {
+          const val = meseInput.value.trim();
+          if (!regex.test(val)) {
+            e.preventDefault();
+            meseInput.classList.add('input-error');
+            meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
+          }
+        });
+
+        meseInput.addEventListener('input', function() {
+          if (regex.test(meseInput.value.trim())) {
+            meseInput.classList.remove('input-error');
+            meseError.textContent = '';
+          }
+        });
+      });
+    </script>
   
 
 <body>
-    <nav>
-        <a href="{{ url_for('index') }}">Convertitore CSV</a>
-        <a href="{{ url_for('hrsuite.hrsuite') }}">HRSuite</a>
-      </nav>
+   <nav>
+  <a href="{{ url_for('index') }}">Convertitore CSV</a>
+  <a href="{{ url_for('hrsuite.hrsuite') }}">HRSuite</a>
+</nav>
 
     <div id="convertitore" class="section active">
         <h1>Converti CSV in Tracciato .TXT</h1>
