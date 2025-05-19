@@ -14,7 +14,6 @@ hrsuite_bp = Blueprint('hrsuite', __name__, template_folder='templates')
 @hrsuite_bp.route('/hrsuite', methods=['GET', 'POST'])
 def hrsuite():
     result_filename = None
-    no_trovati= set()
 
     if request.method == 'POST':
         print("\n[DEBUG] --- HRSuite POST ricevuto ---")
@@ -51,7 +50,7 @@ def hrsuite():
 
             result_filename = "output_hrsuite.csv"
             output_path = os.path.join(OUTPUT_FOLDER, result_filename)
-            genera_output_hrsuite(
+            no_trovati = genera_output_hrsuite(
                 path1, path2, output_path,
                 identificativoProvvedimento,
                 anno, mese,
@@ -82,6 +81,7 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
 
     # Costruzione dizionario da file anagrafico
     anagrafico = {}
+    no_trovati = set()
     with open(anagrafico_path, newline='', encoding='utf-8') as a_file:
         reader = csv.DictReader(a_file, delimiter=';')
         for row in reader:
@@ -189,3 +189,5 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
         writer.writerows(righe)
         print(f"[DEBUG] File '{output_path}' scritto con {len(righe)} record.")
     print("[DEBUG] --- Fine genera_output_hrsuite ---\n")
+    return no_trovati
+
