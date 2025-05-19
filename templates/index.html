@@ -260,7 +260,17 @@
               </a>
             </div>
         {% endif %}
-        
+    
+        {% if no_trovati %}
+          <div class="alert" style="border-color:#dc3545; background:#f8d7da; color:#721c24;">
+            <strong>Attenzione! Questi nominativi non sono presenti nell’anagrafico:</strong>
+            <ul style="text-align:left; margin:0.5rem 1rem;">
+              {% for nome in no_trovati %}
+                <li>{{ nome }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
     </div>
 
     <footer>
