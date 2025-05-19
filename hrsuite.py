@@ -189,5 +189,6 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
         writer.writerows(righe)
         print(f"[DEBUG] File '{output_path}' scritto con {len(righe)} record.")
     print("[DEBUG] --- Fine genera_output_hrsuite ---\n")
+    
     return no_trovati
 
