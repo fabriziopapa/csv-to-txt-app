@@ -29,6 +29,10 @@ def hrsuite():
         codiceCentroDiCosto = request.form.get('codiceCentroDiCosto', '')
         riferimento = request.form.get('riferimento', '')
         nota = request.form.get('note', '')
+        # Flag “Compensi omnicomprensivi”
+        compensi_omnicomprensivi = request.form.get('compensi_omnicomprensivi') == 'on'
+        print(f"[DEBUG] Compensi omnicomprensivi: {compensi_omnicomprensivi}")
+
 
         print(f"[DEBUG] Form values → identificativoProvv: '{identificativoProvvedimento}', "
               f"anno: {anno}, mese: {mese}, codiceVoce: {codiceVoce}, codiceCapitolo: {codiceCapitolo}, "
@@ -66,7 +70,7 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
                           identificativoProvvedimento,
                           anno, mese,
                           codiceVoce, codiceCapitolo, codiceCentroDiCosto,
-                          riferimento, nota):
+                          riferimento, nota,compensi_omnicomprensivi):
 
     print("\n[DEBUG] --- Inizio genera_output_hrsuite ---")
     print(f"[DEBUG] Paths in input → anagrafico: {anagrafico_path}, compensi: {compensi_path}")
@@ -126,6 +130,13 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
             # importo
             try:
                 imp = float(importo_raw.replace(".", "").replace(",", ".")) if importo_raw else 0.0
+                if compensi_omnicomprensivi:
+                    # flag ON → applica scorporo
+                    if ruolo == "RD":
+                        imp = imp / (1 + 0.3431)
+                    else:
+                        imp = imp / (1 + 0.3270)
+                # else (flag OFF) → imp rimane raw_importo
             except:
                 imp = 0.0
                 print(f"[DEBUG] RIGA {i}: importo non valido → '{importo_raw}', imposto 0")

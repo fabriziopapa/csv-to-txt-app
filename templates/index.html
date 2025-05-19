@@ -207,7 +207,7 @@
             <input type="file" name="csv_file_2" accept=".CSV" required>
           
             <label for="identificativoProvvedimento">Identificativo Provvedimento (opzionale):</label>
-            <input type="text" name="identificativoProvvedimento">
+            <input type="text" name="identificativoProvvedimento" required>
           
             <label for="annoCompetenza">Anno competenza:</label>
             <input type="number" name="annoCompetenza" required>
@@ -221,6 +221,13 @@
               required
             >
             <div class="error-message" id="meseError"></div>
+
+            <label for="compensiOmni">Compensi omnicomprensivi:</label>
+            <input 
+              type="checkbox" 
+              id="compensiOmni" 
+              name="compensi_omnicomprensivi" 
+            >
           
             <label for="codiceVoce">Codice Voce:</label>
             <input type="text" name="codiceVoce" required>
