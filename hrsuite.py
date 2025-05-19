@@ -14,6 +14,8 @@ hrsuite_bp = Blueprint('hrsuite', __name__, template_folder='templates')
 @hrsuite_bp.route('/hrsuite', methods=['GET', 'POST'])
 def hrsuite():
     result_filename = None
+    no_trovati= set()
+
     if request.method == 'POST':
         print("\n[DEBUG] --- HRSuite POST ricevuto ---")
         # Upload dei file
@@ -57,8 +59,8 @@ def hrsuite():
                 riferimento, nota,compensi_omnicomprensivi
             )
             print(f"[DEBUG] Generato file: {output_path}")
-
-    return render_template('index.html', result_filename=result_filename)
+    no_trovati_list = sorted(no_trovati)
+    return render_template('index.html', result_filename=result_filename,no_trovati=no_trovati_list)
 
 @hrsuite_bp.route('/download_hrsuite/<filename>')
 def download_hrsuite(filename):
@@ -112,6 +114,7 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
 
     righe = []
     mancanti = 0
+    
     with open(compensi_path, newline='', encoding='utf-8') as c_file:
         reader = csv.DictReader(c_file, delimiter=';')
         for i, row in enumerate(reader, start=1):
@@ -119,6 +122,7 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
             if nominativo not in anagrafico:
                 print(f"[DEBUG] RIGA {i}: nominativo '{nominativo}' NON trovato in anagrafico")
                 mancanti += 1
+                no_trovati.add(nominativo)
                 continue
 
             dati = anagrafico[nominativo]
