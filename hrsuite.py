@@ -129,9 +129,22 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
             parti_raw = row.get("parti", "").strip()
             print(f"[DEBUG] RIGA {i}: nominativo '{nominativo}', importo='{importo_raw}', parti='{parti_raw}'")
 
+            raw = importo_raw
+            if "," in raw and "." in raw:
+                normalized = raw.replace(".", "").replace(",", ".")
+            elif "," in raw:
+                normalized = raw.replace(",", ".")
+            else:
+                normalized = raw
             # importo
             try:
-                imp = float(importo_raw.replace(".", "").replace(",", ".")) if importo_raw else 0.0
+                imp = float(normalized) if normalized else 0.0
+            except ValueError:
+                imp = 0.0
+                print(f"[DEBUG] RIGA {i}: importo non valido → '{importo_raw}', imposto 0")
+
+            try:
+                #imp = float(importo_raw.replace(".", "").replace(",", ".")) if importo_raw else 0.0
                 if compensi_omnicomprensivi:
                     # flag ON → applica scorporo
                     if ruolo == "RD":
