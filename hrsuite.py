@@ -115,15 +115,15 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
     with open(compensi_path, newline='', encoding='utf-8') as c_file:
         reader = csv.DictReader(c_file, delimiter=';')
         for i, row in enumerate(reader, start=1):
-            nominativo = row.get("NOMINATIVO", "").strip().upper()
+            nominativo = row.get("nominativo", "").strip().upper()
             if nominativo not in anagrafico:
                 print(f"[DEBUG] RIGA {i}: nominativo '{nominativo}' NON trovato in anagrafico")
                 mancanti += 1
                 continue
 
             dati = anagrafico[nominativo]
-            matricola = dati["matricola"]
-            ruolo = dati["ruolo"]
+            matricola = dati["MATRICOLA"]
+            ruolo = dati["RUOLO"]
 
             importo_raw = row.get("importo", "").strip()
             parti_raw = row.get("parti", "").strip()
