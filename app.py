@@ -128,9 +128,9 @@ def format_record_rmz(count, progressivo):
     data_creazione = datetime.now().strftime('%Y%m%d')
     progressivo_rmz = str(count + 2).zfill(7)
     num_rmd = str(count).zfill(7)
-    num_emf = '0000000'
-    num_totale = str(count + 2).zfill(7)
-    filler = ' ' * 71
+    #num_emf = '0000000'
+    #num_totale = str(count + 2).zfill(7)
+    filler = ' ' * 85
     print(f"Creazione RMZ: progressivo={progressivo_rmz}, totale RMD={num_rmd}, totale={num_totale}")
     record = (
         'RMZ' +
@@ -139,7 +139,7 @@ def format_record_rmz(count, progressivo):
         data_creazione +
         num_rmd +
         num_emf +
-        num_totale +
+        #num_totale +
         filler
     ).ljust(300)[:300]
     return record
