@@ -51,10 +51,8 @@ Ogni riga è lunga esattamente 300 byte.
 | Progressivo finale                | 004–010   | ultimo record + 1                   |
 | Identificativo file               | 011–030   | come `RMA`                          |
 | Data creazione                    | 031–038   | formato `AAAAMMGG`                  |
-| Totale record `RMD` (EMD)         | 039–045   | es. `0000010`                       |
-| Totale record `EMF`               | 046–052   | `0000000`                           |
-| Totale record (RMA+RMD+RMZ)       | 053–059   | es. `0000012`                       |
-| Filler                            | 060–130   | Spazi                               |
+| Totale record (RMA+RMD+RMZ)       | 039–045   | es. `0000012`                       |
+| Filler                            | 046–300   | Spazi                               |
 
 ---
 
