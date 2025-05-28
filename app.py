@@ -127,7 +127,7 @@ def format_record_rmz(count, progressivo):
     identificativo_file = f"IRMEQS{datetime.now().year}{progressivo:010}".ljust(20)[:20]
     data_creazione = datetime.now().strftime('%Y%m%d')
     progressivo_rmz = str(count + 2).zfill(7)
-    num_rmd = str(count).zfill(7)
+    num_rmd = str(count+2).zfill(7)
     #num_emf = '0000000'
     #num_totale = str(count + 2).zfill(7)
     filler = ' ' * 85
