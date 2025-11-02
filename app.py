@@ -79,7 +79,7 @@ def get_next_progressivo(nome_base, commit=True):
 
 def generate_filename():
     anno = datetime.now().year
-    progressivo = get_next_progressivo('IRMEQS')
+    progressivo = get_next_progressivo('IRMEQS', commit=False)  # solo in memoria
     filename = f"IRMEQS{anno}{progressivo:010}.TXT"
     print(f"Generato nome file: {filename}")
     return filename
