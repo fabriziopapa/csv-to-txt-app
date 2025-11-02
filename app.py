@@ -156,6 +156,9 @@ def convert_csv_to_fixed_txt(csv_path, txt_path, progressivo):
         for i, row in enumerate(rows):
             cod_fis = row['COD_FIS'].strip()
             netto = row['NETTO'].strip()
+            if not cod_fis:
+                raise ValueError(f"COD_FIS mancante alla riga {i+2} del CSV")  # +2 perché header + 1-based
+            
             txtfile.write(format_record_rmd(cod_fis, netto, i) + '\n')
             count += 1
         txtfile.write(format_record_rmz(count, progressivo) + '\n')
