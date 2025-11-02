@@ -188,6 +188,7 @@ def index():
                 get_next_progressivo('IRMEQS', commit=True)  # conferma l'incremento
             except Exception as e:
                 print("Errore durante la elaborazione CSV:", e)
+                progressivo = progressivo -1
                 traceback.print_exc()
                 error_message = str(e)
                 filename = None
