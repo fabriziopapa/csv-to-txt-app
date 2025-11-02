@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 import csv
+import traceback
 from hrsuite import hrsuite_bp 
 
 app = Flask(__name__)
@@ -147,7 +148,7 @@ def format_record_rmz(count, progressivo):
 
 def convert_csv_to_fixed_txt(csv_path, txt_path, progressivo):
     print(f"Apro CSV da: {csv_path} e scrivo TXT in: {txt_path}")
-    with open(csv_path, newline='', encoding='utf-8') as csvfile, open(txt_path, 'w', encoding='utf-8') as txtfile:
+    with open(csv_path, newline='', encoding='utf-8',errors='replace') as csvfile, open(txt_path, 'w', encoding='utf-8') as txtfile:
         reader = csv.DictReader(csvfile, delimiter=';')
         rows = list(reader)
         txtfile.write(format_record_rma(progressivo) + '\n')
@@ -173,11 +174,18 @@ def index():
         if file and file.filename.endswith('.CSV'):
             print(f"File valido ricevuto: {file.filename}")
             csv_path = os.path.join(UPLOAD_FOLDER, file.filename)
-            file.save(csv_path)
-            progressivo = get_next_progressivo('IRMEQS')
-            filename = get_filename_by_progressivo(progressivo)
-            txt_path = os.path.join(OUTPUT_FOLDER, filename)
-            convert_csv_to_fixed_txt(csv_path, txt_path, progressivo)
+            try:
+                file.save(csv_path)
+                progressivo = get_next_progressivo('IRMEQS')
+                txt_path = os.path.join(OUTPUT_FOLDER, filename)
+                convert_csv_to_fixed_txt(csv_path, txt_path, progressivo)
+                filename = get_filename_by_progressivo(progressivo)
+            except Exception as e:
+                print("Errore durante la elaborazione CSV:", e)
+                traceback.print_exc()
+                error = "Errore durante la conversione del file. Controlla il formato."
+                filename = None
+
         else:
             print("Nessun file o file non valido")
     return render_template('index.html', filename=filename)
