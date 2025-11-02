@@ -168,6 +168,7 @@ def get_filename_by_progressivo(progressivo):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     filename = None
+    error_message = None  # ← inizializza qui
     if request.method == 'POST':
         print("Ricevuta richiesta POST con file CSV")
         file = request.files.get('csv_file')
