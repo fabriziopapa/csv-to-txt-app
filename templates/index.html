@@ -180,6 +180,12 @@
         </div>
         {% endif %}
 
+        {% if error_message %}
+        <div class="alert" style="border-color:#dc3545; background:#f8d7da; color:#721c24;">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="csv_file" accept=".CSV" required><br>
             <button class="btn" type="submit">Carica e Converti</button>
