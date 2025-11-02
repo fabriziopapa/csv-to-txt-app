@@ -187,7 +187,7 @@ def index():
             except Exception as e:
                 print("Errore durante la elaborazione CSV:", e)
                 traceback.print_exc()
-                error = str(e)
+                error_message = str(e)
                 filename = None
 
         else:
