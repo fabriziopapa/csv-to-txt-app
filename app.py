@@ -172,15 +172,15 @@ def index():
     if request.method == 'POST':
         print("Ricevuta richiesta POST con file CSV")
         file = request.files.get('csv_file')
-        if file and file.filename.endswith('.CSV'):
+        if file and file.filename.lower().endswith('.csv'):
             print(f"File valido ricevuto: {file.filename}")
             csv_path = os.path.join(UPLOAD_FOLDER, file.filename)
             try:
                 file.save(csv_path)
                 progressivo = get_next_progressivo('IRMEQS')
+                filename = get_filename_by_progressivo(progressivo)
                 txt_path = os.path.join(OUTPUT_FOLDER, filename)
                 convert_csv_to_fixed_txt(csv_path, txt_path, progressivo)
-                filename = get_filename_by_progressivo(progressivo)
             except Exception as e:
                 print("Errore durante la elaborazione CSV:", e)
                 traceback.print_exc()
