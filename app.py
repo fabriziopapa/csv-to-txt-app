@@ -62,7 +62,7 @@ def info():
 def alert():
     return "Applicazione locale - nessun dato sensibile o fiscale viene memorizzato in remoto"
     
-def get_next_progressivo(nome_base):
+def get_next_progressivo(nome_base, commit=True):
     anno = datetime.now().year
     print(f"Recupero progressivo per {nome_base} - anno {anno}")
     record = Progressivo.query.filter_by(nome_base=nome_base, anno=anno).first()
@@ -73,7 +73,8 @@ def get_next_progressivo(nome_base):
         record = Progressivo(nome_base=nome_base, anno=anno, progressivo=1)
         db.session.add(record)
         print("Creato nuovo record progressivo = 1")
-    db.session.commit()
+    if commit:
+        db.session.commit()
     return record.progressivo
 
 def generate_filename():
@@ -180,10 +181,11 @@ def index():
             csv_path = os.path.join(UPLOAD_FOLDER, file.filename)
             try:
                 file.save(csv_path)
-                progressivo = get_next_progressivo('IRMEQS')
+                progressivo = get_next_progressivo('IRMEQS', commit=False)  # modifica la funzione per supportare commit=False
                 filename = get_filename_by_progressivo(progressivo)
                 txt_path = os.path.join(OUTPUT_FOLDER, filename)
                 convert_csv_to_fixed_txt(csv_path, txt_path, progressivo)
+                get_next_progressivo('IRMEQS', commit=True)  # conferma l'incremento
             except Exception as e:
                 print("Errore durante la elaborazione CSV:", e)
                 traceback.print_exc()
