@@ -187,8 +187,8 @@ def index():
                 filename = None
 
         else:
-            print("Nessun file o file non valido")
-    return render_template('index.html', filename=filename)
+            error_message = "File non valido o assente. Carica un CSV."
+    return render_template('index.html', filename=filename,error_message=error_message)
 
 @app.route('/download/<filename>')
 def download(filename):
