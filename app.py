@@ -114,7 +114,7 @@ def format_record_rmd(cod_fis, netto, index):
         importo = '0'.zfill(15)
         print("Valore netto non valido, impostato a 0")
     flag_pos65 = '1'  # posizione 65
-    filler = ' ' * (300 - 64)
+    filler = ' ' * (300 - 65)
     return (
         tipo_record +
         progressivo_record +
