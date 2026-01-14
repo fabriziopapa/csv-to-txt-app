@@ -113,6 +113,7 @@ def format_record_rmd(cod_fis, netto, index):
     except ValueError:
         importo = '0'.zfill(15)
         print("Valore netto non valido, impostato a 0")
+    flag_pos65 = '1'  # posizione 65
     filler = ' ' * (300 - 64)
     return (
         tipo_record +
@@ -122,6 +123,7 @@ def format_record_rmd(cod_fis, netto, index):
         codice_fiscale +
         identificativo_pagamento +
         importo +
+        flag_pos65 +
         filler
     )
 
