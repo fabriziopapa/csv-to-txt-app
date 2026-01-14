@@ -39,6 +39,7 @@ Ogni riga è lunga esattamente 300 byte.
 | Codice fiscale             | 019–034   | da colonna `COD_FIS`           |
 | Identificativo pagamento   | 035–049   | `FSHDAAAAMMGGNN`               |
 | Importo del titolo         | 050–064   | 15 cifre, centesimi            |
+| TIPOLOGIA PAGAMENTO        | 065       | 1 limite 2500 ; " " lim 5000   |
 | Filler                     | 065–300   | Spazi                          |
 
 ---
