@@ -68,6 +68,33 @@
             color: #777;
             text-align: center;
         }
+
+        .pdf-results {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .pdf-summary {
+            background: #ffe600;
+            padding: 1rem;
+            border-radius: 8px;
+            white-space: pre-line;
+        }
+
+        .pdf-voices {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .pdf-voices label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
         
                 /* ─── Layout HRSuite con CSS Grid ───────────────────────────── */
         .form-grid {
@@ -121,54 +148,81 @@
 
 
 
-<script>
-      function showSection(id) {
-        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); 
-      }
-    </script>
-
     <!-- Tutta la logica di tab-switch e validazione in un unico script -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // 1) Apri la tab giusta in base alla URL
-        if (window.location.pathname.endsWith('/hrsuite')) {
-          showSection('hrsuite');
-        } else {
-          showSection('convertitore');
-        }
+        const activeSection = document.body.dataset.activeSection || 'convertitore';
+        showSection(activeSection);
 
         // 2) Validation only if HRSuite form is present
         const form = document.getElementById('hrsuiteForm');
-        if (!form) return;
+        if (form) {
+          const meseInput = document.getElementById('meseCompetenza');
+          const meseError = document.getElementById('meseError');
+          const regex = /^(0[1-9]|1[0-2])$/;
 
-        const meseInput = document.getElementById('meseCompetenza');
-        const meseError = document.getElementById('meseError');
-        const regex = /^(0[1-9]|1[0-2])$/;
+          form.addEventListener('submit', function(e) {
+            const val = meseInput.value.trim();
+            if (!regex.test(val)) {
+              e.preventDefault();
+              meseInput.classList.add('input-error');
+              meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
+            }
+          });
 
-        form.addEventListener('submit', function(e) {
-          const val = meseInput.value.trim();
-          if (!regex.test(val)) {
-            e.preventDefault();
-            meseInput.classList.add('input-error');
-            meseError.textContent = 'Inserisci un mese valido (da 01 a 12)';
-          }
-        });
+          meseInput.addEventListener('input', function() {
+            if (regex.test(meseInput.value.trim())) {
+              meseInput.classList.remove('input-error');
+              meseError.textContent = '';
+            }
+          });
+        }
 
-        meseInput.addEventListener('input', function() {
-          if (regex.test(meseInput.value.trim())) {
-            meseInput.classList.remove('input-error');
-            meseError.textContent = '';
-          }
-        });
+        const pdfData = {{ pdf_data | tojson }};
+        if (pdfData) {
+          const summary = document.getElementById('pdfSummary');
+          const checkboxes = document.querySelectorAll('.pdf-voce-checkbox');
+
+          const updateSummary = () => {
+            let totale = 0;
+            const righe = [];
+            checkboxes.forEach((checkbox) => {
+              if (checkbox.checked) {
+                const descrizione = checkbox.dataset.descrizione;
+                const importo = parseFloat(checkbox.dataset.importo);
+                righe.push(`- ${descrizione} € ${importo.toFixed(2)}`);
+                totale += importo;
+              }
+            });
+
+            const header = [
+              `NOMINATIVO: ${pdfData.nominativo || ''}`,
+              `MATRICOLA: ${pdfData.matricola || ''}`,
+              `CF: ${pdfData.cf || ''}`,
+              `PERIODO: ${pdfData.periodo || ''}`,
+              '',
+              'VOCI SELEZIONATE:',
+              ...righe,
+              '',
+              `TOTALE SELEZIONATO: € ${totale.toFixed(2)}`
+            ];
+            summary.textContent = header.join('\n');
+          };
+
+          checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', updateSummary);
+          });
+          updateSummary();
+        }
       });
     </script>
   
 
-<body>
+<body data-active-section="{{ active_section | default('convertitore') }}">
    <nav>
   <a href="{{ url_for('index') }}">Convertitore CSV</a>
   <a href="{{ url_for('hrsuite.hrsuite') }}">HRSuite</a>
+  <a href="{{ url_for('pdf_parser.pdf_parser') }}">Parser PDF</a>
 </nav>
 
     <div id="convertitore" class="section active">
@@ -195,6 +249,46 @@
         <div class="download-link">
             <p><strong>Elaborazione completata!</strong></p>
             <a class="btn" href="{{ url_for('download', filename=filename) }}">Scarica il file generato</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="pdf-parser" class="section">
+        <h2>Parser PDF Cedolino Stipendiale</h2>
+
+        {% if app_notice %}
+        <div class="alert">
+            {{ app_notice }}
+        </div>
+        {% endif %}
+
+        {% if pdf_error_message %}
+        <div class="alert" style="border-color:#dc3545; background:#f8d7da; color:#721c24;">
+            {{ pdf_error_message }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('pdf_parser.pdf_parser') }}" enctype="multipart/form-data">
+            <input type="file" name="pdf_file" accept=".pdf" required><br>
+            <button class="btn" type="submit">Carica PDF</button>
+        </form>
+
+        {% if pdf_data %}
+        <div class="pdf-results">
+            <div class="pdf-summary" id="pdfSummary"></div>
+            <div class="pdf-voices">
+                {% for voce in pdf_data.voci %}
+                <label>
+                    <input
+                        type="checkbox"
+                        class="pdf-voce-checkbox"
+                        data-descrizione="{{ voce.descrizione }}"
+                        data-importo="{{ voce.importo }}"
+                    >
+                    {{ voce.descrizione }} € {{ "%.2f"|format(voce.importo) }}
+                </label>
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
     </div>

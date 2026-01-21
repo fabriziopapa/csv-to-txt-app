@@ -4,12 +4,14 @@ from datetime import datetime
 import os
 import csv
 import traceback
-from hrsuite import hrsuite_bp 
+from hrsuite import hrsuite_bp
+from gui import pdf_parser_bp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.register_blueprint(hrsuite_bp)
+app.register_blueprint(pdf_parser_bp)
 db = SQLAlchemy(app)
 
 UPLOAD_FOLDER = '/tmp/uploads'
@@ -197,7 +199,14 @@ def index():
 
         else:
             error_message = "File non valido o assente. Carica un CSV."
-    return render_template('index.html', filename=filename,error_message=error_message)
+    return render_template(
+        'index.html',
+        filename=filename,
+        error_message=error_message,
+        pdf_data=None,
+        pdf_error_message=None,
+        active_section="convertitore",
+    )
 
 @app.route('/download/<filename>')
 def download(filename):
