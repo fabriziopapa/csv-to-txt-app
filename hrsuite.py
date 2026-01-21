@@ -61,7 +61,14 @@ def hrsuite():
             )
             print(f"[DEBUG] Generato file: {output_path}")
 
-    return render_template('index.html', result_filename=result_filename,no_trovati = no_trovati )
+    return render_template(
+        'index.html',
+        result_filename=result_filename,
+        no_trovati=no_trovati,
+        pdf_data=None,
+        pdf_error_message=None,
+        active_section="hrsuite",
+    )
 
 @hrsuite_bp.route('/download_hrsuite/<filename>')
 def download_hrsuite(filename):
@@ -193,5 +200,4 @@ def genera_output_hrsuite(anagrafico_path, compensi_path, output_path,
     print("[DEBUG] --- Fine genera_output_hrsuite ---\n")
     
     return no_trovati
-
 

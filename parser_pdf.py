@@ -2,7 +2,7 @@ import pdfplumber
 import re
 
 
-def estrai_dati_da_pdf(path):
+def estrai_dati_da_pdf(pdf_source):
     """
     Estrae i dati necessari al certificato stipendiale
     da un PDF cedolino strutturato (NON scansione).
@@ -17,7 +17,10 @@ def estrai_dati_da_pdf(path):
         "netto": None
     }
 
-    with pdfplumber.open(path) as pdf:
+    if hasattr(pdf_source, "seek"):
+        pdf_source.seek(0)
+
+    with pdfplumber.open(pdf_source) as pdf:
         page = pdf.pages[0]
 
         # ==================================================
